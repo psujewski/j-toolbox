@@ -9,11 +9,13 @@ Add the following dependency to your pom.xml:
 
 ```xml
 <dependency>
-  <groupId>info.psuj.toolbox</groupId>
-  <artifactId>toolbox</artifactId>
-  <version>1.0</version>
+    <groupId>info.psuj</groupId>
+    <artifactId>toolbox</artifactId>
+    <version>1.0</version>
 </dependency>
 ```
+
+[![Maven Central](https://img.shields.io/maven-central/v/info.psuj/toolbox.svg?label=Maven%20Central)](https://search.maven.org/artifact/info.psuj/toolbox)
 
 ## Features
 
