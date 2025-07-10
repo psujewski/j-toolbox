@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 
 /**
+ * WARN: This class is only unit test utility.
  * Test implementation of {@link TimeProvider} that always returns a fixed instant.
  * <p>
  * Useful for writing deterministic unit tests.
@@ -32,6 +33,16 @@ public class FixedTimeProvider implements TimeProvider {
      */
     public FixedTimeProvider(Clock fixedClock) {
         this.fixedClock = fixedClock;
+    }
+
+    /**
+     * Creates a fixed time provider initialized with the given instant.
+     *
+     * @param instant the fixed point in time to return on each call to {@link #now()}
+     * @return a new instance of {@link FixedTimeProvider}
+     */
+    public static FixedTimeProvider nowAt(Instant instant) {
+        return new FixedTimeProvider(instant);
     }
 
     @Override

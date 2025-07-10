@@ -5,6 +5,7 @@ import java.util.Queue;
 import java.util.LinkedList;
 
 /**
+ * WARN: This class is only unit test utility.
  * Test implementation of {@link UuidProvider} that returns predefined UUIDs in sequence.
  * <p>
  * When the list is exhausted, a fallback UUID {@code 00000000-0000-0000-0000-000000000000} is returned.

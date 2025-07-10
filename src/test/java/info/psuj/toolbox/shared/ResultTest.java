@@ -16,17 +16,17 @@ class ResultTest {
     @Test
     void should_return_success_with_result_and_events() {
         // given
-        UUID entity = UUID.randomUUID();
+        UUID value = UUID.randomUUID();
         DomainEvent event1 = new TestEvent("event-1");
         DomainEvent event2 = new TestEvent("event-2");
 
         // when
-        Result<UUID> result = Result.success(entity, event1, event2);
+        Result<UUID> result = Result.success(value, event1, event2);
 
         // then
         assertThat(result.isSuccess()).isTrue();
         assertThat(result.isFailure()).isFalse();
-        assertThat(result.entity()).contains(entity);
+        assertThat(result.value()).contains(value);
         assertThat(result.events()).containsExactly(event1, event2);
         assertThat(result.errors()).isEmpty();
     }
@@ -41,7 +41,7 @@ class ResultTest {
 
         // then
         assertThat(result.isSuccess()).isTrue();
-        assertThat(result.entity()).isEmpty();
+        assertThat(result.value()).isEmpty();
         assertThat(result.events()).containsExactly(event);
         assertThat(result.errors()).isEmpty();
     }
@@ -55,7 +55,7 @@ class ResultTest {
 
         // then
         assertThat(result.isSuccess()).isTrue();
-        assertThat(result.entity()).isEmpty();
+        assertThat(result.value()).isEmpty();
         assertThat(result.events()).isEmpty();
         assertThat(result.errors()).isEmpty();
     }
@@ -68,7 +68,7 @@ class ResultTest {
         // then
         assertThat(result.isFailure()).isTrue();
         assertThat(result.isSuccess()).isFalse();
-        assertThat(result.entity()).isEmpty();
+        assertThat(result.value()).isEmpty();
         assertThat(result.events()).isEmpty();
         assertThat(result.errors()).containsExactly("validation error");
     }
@@ -106,7 +106,7 @@ class ResultTest {
         Result<Void> result = Result.success(Set.of(new TestEvent("x")));
 
         // then
-        assertThat(result.entity()).isEqualTo(Optional.empty());
+        assertThat(result.value()).isEqualTo(Optional.empty());
     }
 
     @Test
@@ -157,7 +157,7 @@ class ResultTest {
 
         // then
         assertThat(mapped.isSuccess()).isTrue();
-        assertThat(mapped.entity()).contains(userId.toString());
+        assertThat(mapped.value()).contains(userId.toString());
         assertThat(mapped.events()).containsExactly(new TestEvent("created"));
         assertThat(mapped.errors()).isEmpty();
     }
@@ -172,7 +172,7 @@ class ResultTest {
 
         // then
         assertThat(mapped.isSuccess()).isTrue();
-        assertThat(mapped.entity()).isEmpty();
+        assertThat(mapped.value()).isEmpty();
         assertThat(mapped.events()).containsExactly(new TestEvent("noop"));
         assertThat(mapped.errors()).isEmpty();
     }
@@ -187,8 +187,41 @@ class ResultTest {
 
         // then
         assertThat(mapped.isFailure()).isTrue();
-        assertThat(mapped.entity()).isEmpty();
+        assertThat(mapped.value()).isEmpty();
         assertThat(mapped.events()).isEmpty();
         assertThat(mapped.errors()).containsExactly("validation failed");
+    }
+
+    @Test
+    void should_allow_failure_without_message() {
+        // when
+        Result<String> result = Result.failure();
+        Result<String> resultSet = Result.failure(Set.of());
+
+        // then
+        assertThat(result.isFailure()).isTrue();
+        assertThat(result.value()).isEmpty();
+        assertThat(result.events()).isEmpty();
+        assertThat(result.errors()).isEmpty();
+        assertThat(resultSet.isFailure()).isTrue();
+        assertThat(resultSet.value()).isEmpty();
+        assertThat(resultSet.events()).isEmpty();
+        assertThat(resultSet.errors()).isEmpty();
+    }
+
+    @Test
+    void should_reject_null_error() {
+        Set<String> errors = new HashSet<>();
+        errors.add(null);
+
+        assertThatThrownBy(() -> Result.failure(errors)).isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    void should_reject_null_event() {
+        Set<DomainEvent> events = new HashSet<>();
+        events.add(null);
+
+        assertThatThrownBy(() -> Result.success("x", events)).isInstanceOf(NullPointerException.class);
     }
 }
