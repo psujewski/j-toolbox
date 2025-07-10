@@ -12,9 +12,9 @@ Add the following dependency to your pom.xml:
 
 ```xml
 <dependency>
-    <groupId>info.psuj</groupId>
-    <artifactId>toolbox</artifactId>
-    <version>1.0</version>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>${project.artifactId}</artifactId>
+    <version>${project.version}</version>
 </dependency>
 ```
 
